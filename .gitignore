@@ -4,7 +4,6 @@ __pycache__/
 *.pyo
 
 # Model files (too large for GitHub)
-*.pkl
 
 # Data files (too large for GitHub)
 *.csv
