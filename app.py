@@ -6,6 +6,10 @@ import requests
 from datetime import date, timedelta
 import pandas as pd
 
+st.markdown("""
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+""", unsafe_allow_html=True)
+
 # ── Page config ───────────────────────────────────────────────────────────────
 st.set_page_config(
     page_title="Nepal Disaster Risk Predictor",
@@ -25,6 +29,14 @@ html, body, [class*="css"] {
 }
 #MainMenu, footer, header { visibility: hidden; }
 
+.bi {
+    font-size: 14px;
+    vertical-align: middle;
+    margin-right: 5px;
+}
+.result-icon .bi {
+    font-size: 3rem;
+}
 .hero {
     background: linear-gradient(135deg, #0d1f2d 0%, #1a3a4a 60%, #0d1f2d 100%);
     border: 1px solid #1e4060;
@@ -280,7 +292,7 @@ def render_result(pred, proba, district, month):
     if pred == 0:
         st.markdown(f"""
         <div class="result-safe">
-            <div class="result-icon">🟢</div>
+            <div class="result-icon"><i class="bi bi-check-circle" style="color:#52b788"></i></div>
             <div class="result-title c-safe">NO SIGNIFICANT RISK</div>
             <div class="result-sub">{district.title()} · {mn} · {season_name}<br>
             Conditions appear stable. Continue monitoring rainfall.</div>
@@ -288,7 +300,7 @@ def render_result(pred, proba, district, month):
     elif pred == 1:
         st.markdown(f"""
         <div class="result-flood">
-            <div class="result-icon">🔴</div>
+            <div class="result-icon"><i class="bi bi-exclamation-octagon" style="color:#e63946"></i></div>
             <div class="result-title c-flood">FLOOD RISK DETECTED</div>
             <div class="result-sub">{district.title()} · {mn} · {season_name}<br>
             Avoid low-lying riverbanks and waterways immediately.</div>
@@ -296,13 +308,13 @@ def render_result(pred, proba, district, month):
     else:
         st.markdown(f"""
         <div class="result-land">
-            <div class="result-icon">🟠</div>
+            <div class="result-icon"><i class="bi bi-exclamation-triangle" style="color:#f4a261"></i></div>
             <div class="result-title c-land">LANDSLIDE RISK DETECTED</div>
             <div class="result-sub">{district.title()} · {mn} · {season_name}<br>
             Avoid steep slopes, hill roads, and river valleys.</div>
         </div>""", unsafe_allow_html=True)
 
-    st.markdown('<div class="section-label">📊 Confidence Breakdown</div>', unsafe_allow_html=True)
+    st.markdown('<div class="section-label"><i class="bi bi-bar-chart-line"></i> Confidence Breakdown</div>', unsafe_allow_html=True)
     bars = [("No Event", p0, "#52b788"), ("Flood", p1, "#e63946"), ("Landslide", p2, "#f4a261")]
     html = ""
     for label, pct, color in bars:
@@ -315,7 +327,7 @@ def render_result(pred, proba, district, month):
     tip = "<strong>Monsoon season active.</strong> ~80% of Nepal's annual rainfall falls Jun–Sep. Risk is naturally elevated." \
         if 6 <= month <= 9 else \
         "<strong>Outside monsoon season.</strong> Risk generally lower, though localised events can still occur in hill districts."
-    st.markdown(f'<div class="info-box">ℹ️ {tip}</div>', unsafe_allow_html=True)
+    st.markdown(f'<div class="info-box">'<i class="bi bi-info-circle"></i> {tip}'</div>', unsafe_allow_html=True)
 
 # ── Helper: fetch weather from Open-Meteo ─────────────────────────────────────
 def fetch_weather(district, past_days=30, forecast_days=16):
@@ -362,7 +374,7 @@ tab1, tab2, tab3 = st.tabs(["🌧️ Current Risk", "🔮 Future Forecast", "�
 # TAB 1 — CURRENT RISK (auto-fetch last 30 days)
 # ─────────────────────────────────────────────────────────────────────────────
 with tab1:
-    st.markdown('<div class="section-label">📍 Select District</div>', unsafe_allow_html=True)
+    st.markdown('<div class="section-label"><i class="bi bi-geo-alt"></i> Select District</div>', unsafe_allow_html=True)
     district_1 = st.selectbox("District", options=districts,
                                index=districts.index('kathmandu') if 'kathmandu' in districts else 0,
                                key="d1")
@@ -383,36 +395,36 @@ with tab1:
                 month    = int(today_row['date'].month)
 
                 # Show fetched values
-                st.markdown('<div class="section-label">📡 Auto-Fetched Weather Data</div>', unsafe_allow_html=True)
+                st.markdown('<div class="section-label"><i class="bi bi-wifi"></i> Auto-Fetched Weather Data</div>', unsafe_allow_html=True)
                 st.markdown(f"""
                 <div class="weather-grid">
                     <div class="weather-card">
-                        <div class="wc-icon">🌧️</div>
+                        <div class="wc-icon"><i class="bi bi-cloud-rain"></i></div>
                         <div class="wc-val">{precip_today:.1f}</div>
                         <div class="wc-label">Today (mm)</div>
                     </div>
                     <div class="weather-card">
-                        <div class="wc-icon">📅</div>
+                        <div class="wc-icon"><i class="bi bi-calendar3"></i></div>
                         <div class="wc-val">{r3:.1f}</div>
                         <div class="wc-label">3-Day Total (mm)</div>
                     </div>
                     <div class="weather-card">
-                        <div class="wc-icon">🗓️</div>
+                        <div class="wc-icon"><i class="bi bi-calendar-week"></i></div>
                         <div class="wc-val">{r7:.1f}</div>
                         <div class="wc-label">7-Day Total (mm)</div>
                     </div>
                     <div class="weather-card">
-                        <div class="wc-icon">📆</div>
+                        <div class="wc-icon"><i class="bi bi-calendar-month"></i></div>
                         <div class="wc-val">{r30:.1f}</div>
                         <div class="wc-label">30-Day Total (mm)</div>
                     </div>
                     <div class="weather-card">
-                        <div class="wc-icon">🌡️</div>
+                        <div class="wc-icon"><i class="bi bi-thermometer-half"></i></div>
                         <div class="wc-val">{temp:.1f}°</div>
                         <div class="wc-label">Temp Today (°C)</div>
                     </div>
                     <div class="weather-card">
-                        <div class="wc-icon">📊</div>
+                        <div class="wc-icon"><i class="bi bi-bar-chart"></i></div>
                         <div class="wc-val">{temp_7d:.1f}°</div>
                         <div class="wc-label">7-Day Avg Temp</div>
                     </div>
@@ -430,7 +442,7 @@ with tab1:
 # TAB 2 — FUTURE FORECAST (up to 16 days ahead)
 # ─────────────────────────────────────────────────────────────────────────────
 with tab2:
-    st.markdown('<div class="section-label">📍 Select District & Date</div>', unsafe_allow_html=True)
+    st.markdown('<div class="section-label"><i class="bi bi-geo-alt"></i> Select District & Date</div>', unsafe_allow_html=True)
     col_a, col_b = st.columns([2, 1])
     with col_a:
         district_2 = st.selectbox("District", options=districts,
@@ -443,7 +455,7 @@ with tab2:
                                        min_value=date.today() + timedelta(days=1),
                                        max_value=max_date)
 
-    st.markdown('<div class="warn-box">⚡ Forecasts beyond 7 days have lower accuracy. Use as a general risk guide, not an exact prediction.</div>',
+    st.markdown('<div class="warn-box"><i class="bi bi-lightning"></i> Forecasts beyond 7 days have lower accuracy. Use as a general risk guide, not an exact prediction.</div>',
                 unsafe_allow_html=True)
 
     if st.button("FETCH FORECAST & ASSESS RISK", key="btn2"):
@@ -466,36 +478,36 @@ with tab2:
                     temp7_f   = float(df_w2.loc[max(0,i-6):i, 'temp'].mean())
                     month_f   = int(target_dt.month)
 
-                    st.markdown('<div class="section-label">📡 Forecast Weather Data</div>', unsafe_allow_html=True)
+                    st.markdown('<div class="section-label"><i class="bi bi-wifi"></i> Forecast Weather Data</div>', unsafe_allow_html=True)
                     st.markdown(f"""
                     <div class="weather-grid">
                         <div class="weather-card">
-                            <div class="wc-icon">🌧️</div>
+                            <div class="wc-icon"><i class="bi bi-cloud-rain"></i></div>
                             <div class="wc-val">{precip_f:.1f}</div>
                             <div class="wc-label">That Day (mm)</div>
                         </div>
                         <div class="weather-card">
-                            <div class="wc-icon">📅</div>
+                            <div class="wc-icon"><i class="bi bi-calendar3"></i></div>
                             <div class="wc-val">{r3_f:.1f}</div>
                             <div class="wc-label">Prior 3 Days (mm)</div>
                         </div>
                         <div class="weather-card">
-                            <div class="wc-icon">🗓️</div>
+                            <div class="wc-icon"><i class="bi bi-calendar-week"></i></div>
                             <div class="wc-val">{r7_f:.1f}</div>
                             <div class="wc-label">Prior 7 Days (mm)</div>
                         </div>
                         <div class="weather-card">
-                            <div class="wc-icon">📆</div>
+                            <div class="wc-icon"><i class="bi bi-calendar-month"></i></div>
                             <div class="wc-val">{r30_f:.1f}</div>
                             <div class="wc-label">Prior 30 Days (mm)</div>
                         </div>
                         <div class="weather-card">
-                            <div class="wc-icon">🌡️</div>
+                            <div class="wc-icon"><i class="bi bi-thermometer-half"></i></div>
                             <div class="wc-val">{temp_f:.1f}°</div>
                             <div class="wc-label">Forecast Temp (°C)</div>
                         </div>
                         <div class="weather-card">
-                            <div class="wc-icon">📊</div>
+                            <div class="wc-icon"><i class="bi bi-bar-chart"></i></div>
                             <div class="wc-val">{temp7_f:.1f}°</div>
                             <div class="wc-label">7-Day Avg Temp</div>
                         </div>
@@ -515,12 +527,12 @@ with tab2:
 with tab3:
     st.markdown("""
     <div class="info-box">
-    🧪 <strong>What-If Simulator</strong> — manually enter any weather scenario to see predicted risk.
+    <i class="bi bi-flask"></i> <strong>What-If Simulator</strong> — manually enter any weather scenario to see predicted risk.
     Useful for testing "what if it rains 150mm over 3 days?" without needing real data.
     </div>
     """, unsafe_allow_html=True)
 
-    st.markdown('<div class="section-label">📍 Location & Time</div>', unsafe_allow_html=True)
+    st.markdown('<div class="section-label"><i class="bi bi-geo-alt"></i> Location & Time</div>', unsafe_allow_html=True)
     col1, col2 = st.columns([2,1])
     with col1:
         district_3 = st.selectbox("District", options=districts,
@@ -530,8 +542,8 @@ with tab3:
         month_3 = st.selectbox("Month", list(range(1,13)),
                                 format_func=lambda m: MONTH_NAMES[m-1], index=7, key="m3")
 
-    st.markdown('<div class="section-label">🌧️ Rainfall Scenario</div>', unsafe_allow_html=True)
-    st.caption("💡 Light rain: 0–10mm/day · Moderate: 10–50mm · Heavy: 50–100mm · Extreme: 100mm+")
+    st.markdown('<div class="section-label"><i class="bi bi-cloud-rain"></i> Rainfall Scenario</div>', unsafe_allow_html=True)
+    st.caption("Light rain: 0-10mm/day · Moderate: 10-50mm · Heavy: 50-100mm · Extreme: 100mm+")
 
     col3, col4 = st.columns(2)
     with col3:
@@ -541,7 +553,8 @@ with tab3:
         r3_3     = st.number_input("Last 3 Days Total (mm)", 0.0, 600.0, 180.0, 5.0, key="r3_3")
         r30_3    = st.number_input("Last 30 Days Total (mm)", 0.0, 2000.0, 450.0, 10.0, key="r30_3")
 
-    st.markdown('<div class="section-label">🌡️ Temperature</div>', unsafe_allow_html=True)
+    st.markdown('<div class="section-label"><i class="bi bi-thermometer-half"></i> Temperature</div>', unsafe_allow_html=True)
+
     col5, col6 = st.columns(2)
     with col5:
         temp_3   = st.number_input("Temperature (°C)", -10.0, 45.0, 22.0, 0.5, key="t3")
