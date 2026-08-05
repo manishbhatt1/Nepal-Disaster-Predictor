@@ -327,7 +327,7 @@ def render_result(pred, proba, district, month):
     tip = "<strong>Monsoon season active.</strong> ~80% of Nepal's annual rainfall falls Jun–Sep. Risk is naturally elevated." \
         if 6 <= month <= 9 else \
         "<strong>Outside monsoon season.</strong> Risk generally lower, though localised events can still occur in hill districts."
-    st.markdown(f'<div class="info-box">'<i class="bi bi-info-circle"></i> {tip}'</div>', unsafe_allow_html=True)
+    st.markdown(f'<div class="info-box"><i class="bi bi-info-circle"></i> {tip}</div>', unsafe_allow_html=True)
 
 # ── Helper: fetch weather from Open-Meteo ─────────────────────────────────────
 def fetch_weather(district, past_days=30, forecast_days=16):
