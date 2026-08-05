@@ -1,7 +1,7 @@
 # 🌊 Nepal Disaster Predictor
 
 ## 🚀 Live Demo
-👉 [Try the app here](https://manishbhatt1-nepal-disaster-predictor.streamlit.app)
+👉 [Try the app here](https://nepal-disaster-predictor.streamlit.app/)
 
 A machine learning system that predicts flood and landslide risk across all 77 districts of Nepal — trained on 37 years of historical disaster data and powered by live weather from the OpenMeteo API.
 
